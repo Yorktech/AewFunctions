@@ -22,21 +22,26 @@ def lincolnfsd(req: func.HttpRequest) -> func.HttpResponse:
 
     if url:
         # Fetch the content from the URL
-        response = requests.get(url)
+        headers = {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537'
+                  }
+        url += '&sr=0&nh=10000'
+        response = requests.get(url,headers = headers)
         response.raise_for_status()
-
         # Parse the HTML with BeautifulSoup
         soup = BeautifulSoup(response.content, 'html.parser')
-
+        logging.info('looking at ' + url)
         # Find all instances of the "result_hit" div
         result_hits = soup.find_all('div', class_='result_hit')
+        with open("raw_html_log.txt", "w", encoding="utf-8") as f:
+            f.write(response.content.decode("utf-8"))
 
         data = []
 
         for hit in result_hits:
             service_name = hit.find('header').find('a').text
             link = hit.find('header').find('a')['href']
-            
+            logging.info('parsed' + service_name)
             # Navigate to the link and extract details
             LinkURL = 'https://lincolnshire.fsd.org.uk/kb5/lincs/fsd/'
             details = extract_details(LinkURL+link)
