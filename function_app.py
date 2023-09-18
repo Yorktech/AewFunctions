@@ -33,8 +33,8 @@ def lincolnfsd(req: func.HttpRequest) -> func.HttpResponse:
         logging.info('looking at ' + url)
         # Find all instances of the "result_hit" div
         result_hits = soup.find_all('div', class_='result_hit')
-        with open("raw_html_log.txt", "w", encoding="utf-8") as f:
-            f.write(response.content.decode("utf-8"))
+        # with open("raw_html_log.txt", "w", encoding="utf-8") as f:
+        #    f.write(response.content.decode("utf-8"))
 
         data = []
 
